@@ -46,7 +46,7 @@ interface Player {
     };
   })();
   window.OriginalWebSocket = window.WebSocket;
-  let websockets: WebSocket[] = [];
+  const websockets: WebSocket[] = [];
   const userId = +JSON.parse(
     atob(document.cookie.slice(document.cookie.indexOf("=") + 1))
   ).userId;
@@ -67,11 +67,11 @@ interface Player {
     }
   }
   function listenToMainWebSocket(socket: WebSocket) {
-    const originalMessageHandler = socket.onmessage!;
+    const originalMessageHandler = socket.onmessage;
     socket.onmessage = (event) => {
       const messages = JSON.parse(event.data);
-      const returnValue = originalMessageHandler.call(socket, event);
-      messages.forEach((message: object) => onMessage(socket, message));
+      const returnValue = originalMessageHandler?.call(socket, event);
+      messages.forEach((message: any) => onMessage(socket, message));
       return returnValue;
     };
   }
@@ -106,12 +106,6 @@ interface Player {
   function onOpponentMove(socket: WebSocket, moves: string, ply: number) {
     const fen = getFEN(moves);
     const algebraicMove = book.getOpeningMove(fen);
-    console.log(
-      "opponent moved, current fen is",
-      fen,
-      "making move",
-      algebraicMove
-    );
     if (algebraicMove) {
       sendMove(socket, algebraicMoveToChesscom(algebraicMove), ply);
     }
@@ -141,7 +135,6 @@ interface Player {
         clientId,
       },
     ];
-    console.debug("sending", data);
     socket.send(JSON.stringify(data));
   }
 })();

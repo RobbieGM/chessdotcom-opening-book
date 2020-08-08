@@ -30,7 +30,7 @@ function algebraicSquareToCharacter(algebraicSquare: string) {
 /**
  * Converts algebraic move in the form "{from}{to}" e.g. "e2e4" to chess.com move format.
  */
-export function algebraicMoveToChesscom(algebraicMove: string) {
+export function algebraicMoveToChesscom(algebraicMove: string): string {
   const from = algebraicMove.slice(0, 2);
   const to = algebraicMove.slice(2, 4);
   return `${algebraicSquareToCharacter(from)}${algebraicSquareToCharacter(to)}`;
@@ -45,8 +45,10 @@ function applyMove(board: ChessInstance, move: string) {
       squareCharacterToAlgebraicSquare(secondChar) as Square
     );
     let [
+      // eslint-disable-next-line prefer-const
       piecePlacement,
       sideToMove,
+      // eslint-disable-next-line prefer-const
       castling,
       enPassantTarget,
       halfmoveClock,
@@ -78,7 +80,7 @@ function applyMove(board: ChessInstance, move: string) {
  * Converts a move string in chess.com format to a FEN
  * @param moves Move string in chess.com format
  */
-export function getFEN(moves: string) {
+export function getFEN(moves: string): string {
   const board = new ((Chess as unknown) as typeof ChessType)();
   const movesArray = moves.match(/.{1,2}/g) ?? [];
   movesArray.forEach((move) => applyMove(board, move));

@@ -10,7 +10,7 @@ export default class OpeningBook {
    * Gets the opening move to make, or null if out of book
    * @param fen
    */
-  getOpeningMove(fen: string) {
+  getOpeningMove(fen: string): string | null {
     const [piecePlacement, sideToMove] = fen.split(" ");
     // Move depends on piece placement and side to move but not castling rights or en passant possibilities
     const key = `${piecePlacement} ${sideToMove}`;
