@@ -4,6 +4,7 @@
   "description": "A bot that automatically plays opening moves on chess.com.",
   "scripts": {
     "book-editor-dev": "npx parcel ./src/book-editor/index.html",
+    "book-editor-build": "npx parcel build ./src/book-editor/index.html",
     "build-extension": "npx webpack --config ./src/tampermonkey-script/webpack.config.js"
   },
   "repository": {
