@@ -1,0 +1,26 @@
+{
+  "name": "chessdotcom-opening-book",
+  "version": "0.1.0",
+  "description": "A bot that automatically plays opening moves on chess.com.",
+  "scripts": {
+    "build-extension": "npx webpack --config ./src/tampermonkey-script/webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobbieGM/chessdotcom-opening-book.git"
+  },
+  "author": "Robbie Moore",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RobbieGM/chessdotcom-opening-book/issues"
+  },
+  "homepage": "https://github.com/RobbieGM/chessdotcom-opening-book#readme",
+  "dependencies": {
+    "@types/chess.js": "^0.10.1",
+    "chess.js": "^0.11.0",
+    "ts-loader": "^8.0.2",
+    "typescript": "^3.9.7",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  }
+}
