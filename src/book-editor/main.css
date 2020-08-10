@@ -1,7 +1,0 @@
-body {
-}
-* {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-overflow-scrolling: touch;
-  touch-action: manipulation;
-}

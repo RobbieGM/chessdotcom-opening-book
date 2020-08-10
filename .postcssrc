@@ -1,6 +1,12 @@
 {
-  "modules": true,
+  "modules": false,
   "plugins": {
-    "autoprefixer": {}
+    "tailwindcss": {},
+    "autoprefixer": {},
+    "postcss-modules": {
+      "globalModulePaths": [
+        ".*\\.global\\..*"
+      ]
+    }
   }
 }
