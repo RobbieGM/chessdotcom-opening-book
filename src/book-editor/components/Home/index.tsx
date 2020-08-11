@@ -59,7 +59,14 @@ const Home: FunctionComponent<Props> = ({ editBook }) => {
   async function importBook(file: File) {
     const nameWithoutExtension = file.name.slice(0, file.name.lastIndexOf("."));
     const content = JSON.parse(await readAsText(file)) as OpeningBook;
-    updateBook(nameWithoutExtension, content);
+    if (
+      openingBookNames.includes(nameWithoutExtension) &&
+      confirm(
+        `Overwrite saved version of "${nameWithoutExtension}" with imported version?`
+      )
+    ) {
+      updateBook(nameWithoutExtension, content);
+    }
   }
   return (
     <div>
