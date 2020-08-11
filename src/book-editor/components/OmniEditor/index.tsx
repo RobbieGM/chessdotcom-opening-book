@@ -37,7 +37,7 @@ const OmniEditor: FunctionComponent<Props> = ({ bookName }) => {
   }
   const move: string | undefined = book[partialFEN];
   const setMove = (newMove: string) =>
-    updateBook({ ...book, [partialFEN]: newMove });
+    updateBook({ ...book, ...{ [partialFEN]: newMove } });
   const clearMove = () => {
     if (move == null) {
       alert("This position already does not have a move defined for it.");
@@ -61,7 +61,7 @@ const OmniEditor: FunctionComponent<Props> = ({ bookName }) => {
               )
             ) {
               // update with old partial fen, not new one
-              updateBook({ ...book, [partialFEN]: `${from}${to}` });
+              updateBook({ ...book, ...{ [partialFEN]: `${from}${to}` } });
             }
             setPartialFEN(newPartialFEN);
           },

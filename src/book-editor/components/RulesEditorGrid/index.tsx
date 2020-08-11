@@ -2,6 +2,7 @@ import { FunctionComponent, Fragment, h } from "preact";
 import RuleEditor from "../RuleEditor";
 import { useOpeningBook } from "../../services/books";
 import Trash from "react-feather/dist/icons/trash";
+import OpeningBook from "../../types/opening-book";
 
 interface Props {
   bookName: string;
@@ -31,7 +32,7 @@ const RulesEditorGrid: FunctionComponent<Props> = ({ bookName }) => {
             partialFEN={partialFEN}
             move={move}
             setMove={(newMove) => {
-              updateBook({ ...book, [partialFEN]: newMove });
+              updateBook({ ...book, ...{ [partialFEN]: newMove } });
             }}
           />
           <div className="flex text-sm justify-between">
