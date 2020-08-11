@@ -20,6 +20,9 @@ body {
 #main {
   height: 100%;
 }
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
 button {
   display: inline-flex;
   align-items: center;

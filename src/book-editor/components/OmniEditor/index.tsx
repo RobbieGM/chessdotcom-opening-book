@@ -126,7 +126,7 @@ const OmniEditor: FunctionComponent<Props> = ({ bookName }) => {
           <RefreshCcw size={18} />
           Reset position
         </button>
-        <div class="font-mono text-xs">
+        <div class="font-mono text-xs break-words mt-2">
           {partialFEN} -&gt; {move}
         </div>
       </div>

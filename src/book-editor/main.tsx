@@ -1,6 +1,7 @@
 import "preact/debug";
 import { render, h } from "preact";
 import App from "./components/App/index";
+import "focus-visible";
 import "./chessground.global.css";
 import "./main.global.css";
 

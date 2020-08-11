@@ -33,7 +33,7 @@ const Home: FunctionComponent<Props> = ({ editBook }) => {
   }
   return (
     <div>
-      <h1 class="text-4xl font-bold mt-12 mb-6 text-center">
+      <h1 class="text-4xl font-bold pt-12 mb-6 text-center">
         Chess.com Opening Book Editor
       </h1>
       <div class="border max-w-3xl mx-auto p-4 rounded">
