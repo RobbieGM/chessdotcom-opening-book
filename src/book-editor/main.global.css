@@ -60,3 +60,7 @@ input[type="radio"] + label:hover::before {
 input[type="radio"]:checked + label::before {
   @apply bg-blue-400 border-blue-500;
 }
+
+a {
+  @apply text-blue-700 underline;
+}

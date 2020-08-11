@@ -15,7 +15,7 @@ function getBooks() {
   ) as OpeningBookRecord;
 }
 
-function getBook(bookName: string): OpeningBook | undefined {
+export function getBook(bookName: string): OpeningBook | undefined {
   return getBooks()[bookName];
 }
 

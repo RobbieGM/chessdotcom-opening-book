@@ -4,7 +4,14 @@ export default class OpeningBook {
     if (localStorage.getItem("openingBook") == null) {
       console.warn("No opening book was found");
     }
+    this.dictionary = {}; // TS complains about lack of definite assignment in constructor
+    this.loadFromStorage();
+  }
+  private loadFromStorage() {
     this.dictionary = JSON.parse(localStorage.getItem("openingBook") ?? "{}");
+  }
+  reload(): void {
+    this.loadFromStorage();
   }
   /**
    * Gets the opening move to make, or null if out of book

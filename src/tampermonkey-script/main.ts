@@ -38,6 +38,26 @@ interface Player {
   const book = new OpeningBook();
   let clientId = "";
   let username = "";
+  ondragover = ondragenter = (e) => e.preventDefault();
+  ondrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer?.files[0];
+    if (file == null) {
+      alert("Please provide a file.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = (loadEvent) => {
+      if (!reader.result || typeof reader.result === "object") {
+        alert("Failed to load file--is the file empty?");
+        return;
+      }
+      localStorage.setItem("openingBook", reader.result);
+      book.reload();
+      alert(`Loaded book "${file.name}" successfully.`);
+    };
+  };
   const nextMessageId = (() => {
     let messageId = 100000;
     return () => {
