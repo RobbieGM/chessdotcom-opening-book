@@ -3,20 +3,18 @@ import OpeningBook, { OpeningBookRecord } from "../types/opening-book";
 import { useEffect, useState, StateUpdater } from "preact/hooks";
 
 const bookEventBus = new EventBus<{
-  update: {
-    name: string;
-    content: OpeningBook | undefined;
-  };
+  update: undefined;
 }>();
 
-function getBooks() {
-  return JSON.parse(
-    localStorage.getItem("openingBooks") ?? "{}"
-  ) as OpeningBookRecord;
+// cache for localStorage.openingBooks to avoid JSON parsing and stringifying more than necessary
+const openingBooks: OpeningBookRecord = loadBooks();
+
+function loadBooks(): OpeningBookRecord {
+  return JSON.parse(localStorage.getItem("openingBooks") ?? "{}");
 }
 
 export function getBook(bookName: string): OpeningBook | undefined {
-  return getBooks()[bookName];
+  return openingBooks[bookName];
 }
 
 /**
@@ -28,23 +26,22 @@ export function updateBook(
   bookName: string,
   bookContent: OpeningBook | undefined
 ): void {
-  const openingBooks = getBooks();
   if (bookContent) {
     openingBooks[bookName] = bookContent;
   } else {
     delete openingBooks[bookName];
   }
   localStorage.setItem("openingBooks", JSON.stringify(openingBooks));
-  bookEventBus.publish("update", { name: bookName, content: bookContent });
+  bookEventBus.publish("update", undefined);
 }
 
 export function useOpeningBookNames(): string[] {
   const [cachedBookNames, setCachedBookNames] = useState(() =>
-    Object.keys(getBooks())
+    Object.keys(openingBooks)
   );
   useEffect(() => {
     const { unsubscribe } = bookEventBus.subscribe("update", () => {
-      setCachedBookNames(Object.keys(getBooks()));
+      setCachedBookNames(Object.keys(openingBooks));
     });
     return unsubscribe;
   });
@@ -58,14 +55,11 @@ export function useOpeningBook(
     getBook(bookName)
   );
   useEffect(() => {
-    const { unsubscribe } = bookEventBus.subscribe(
-      "update",
-      ({ name, content }) => {
-        if (name === bookName) {
-          setCachedBook(content);
-        }
+    const { unsubscribe } = bookEventBus.subscribe("update", () => {
+      if (cachedBook !== openingBooks[bookName]) {
+        setCachedBook(openingBooks[bookName]);
       }
-    );
+    });
     return unsubscribe;
   });
   const bookUpdater: StateUpdater<OpeningBook | undefined> = (value) => {
