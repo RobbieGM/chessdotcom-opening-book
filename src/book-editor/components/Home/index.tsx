@@ -1,9 +1,12 @@
 import { FunctionComponent, h } from "preact";
+import Upload from "react-feather/dist/icons/upload";
 import Download from "react-feather/dist/icons/download";
 import Edit from "react-feather/dist/icons/edit";
 import PlusCircle from "react-feather/dist/icons/plus-circle";
 import Trash from "react-feather/dist/icons/trash";
 import { updateBook, useOpeningBookNames, getBook } from "../../services/books";
+import { useRef } from "preact/hooks";
+import OpeningBook from "../../types/opening-book";
 
 interface Props {
   editBook: (bookName: string) => void;
@@ -20,8 +23,30 @@ function saveData(data: any, fileName: string) {
   URL.revokeObjectURL(url);
 }
 
+function readAsText(file: File) {
+  return new Promise<string>((res, rej) => {
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onerror = (e) => rej(new Error("Failed to read file as text."));
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        res(reader.result);
+      } else {
+        rej(
+          new Error(
+            `Result of reading file as text is ${
+              reader.result === null ? "null" : "an ArrayBuffer"
+            }.`
+          )
+        );
+      }
+    };
+  });
+}
+
 const Home: FunctionComponent<Props> = ({ editBook }) => {
   const openingBookNames = useOpeningBookNames();
+  const bookFileInputRef = useRef<HTMLInputElement>();
   function createBook() {
     const bookName = prompt("Enter book name (must be unique)");
     if (bookName == null) return;
@@ -30,6 +55,11 @@ const Home: FunctionComponent<Props> = ({ editBook }) => {
   function exportBook(name: string) {
     const invalidCharacters = /[/<>:"\\|?*]/g;
     saveData(getBook(name), `${name.replace(invalidCharacters, "_")}.json`);
+  }
+  async function importBook(file: File) {
+    const nameWithoutExtension = file.name.slice(0, file.name.lastIndexOf("."));
+    const content = JSON.parse(await readAsText(file)) as OpeningBook;
+    updateBook(nameWithoutExtension, content);
   }
   return (
     <div>
@@ -69,10 +99,24 @@ const Home: FunctionComponent<Props> = ({ editBook }) => {
           )}
         </section>
 
-        <footer class="mt-2">
+        <footer class="mt-2 space-x-2">
           <button onClick={createBook}>
             <PlusCircle size={18} />
             Create book
+          </button>
+          <button onClick={() => bookFileInputRef.current.click()}>
+            <Upload size={18} />
+            <input
+              type="file"
+              ref={bookFileInputRef}
+              accept="application/json"
+              style="display: none"
+              onChange={() =>
+                bookFileInputRef.current.files &&
+                importBook(bookFileInputRef.current.files[0])
+              }
+            />
+            Import book
           </button>
         </footer>
       </div>
