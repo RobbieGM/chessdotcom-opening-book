@@ -20,7 +20,7 @@ const BookEditor: FunctionComponent<Props> = ({ bookName, goBack }) => {
   return (
     <Fragment>
       <nav class="p-4 border-b flex items-center">
-        <button onClick={goBack}>
+        <button onClick={goBack} aria-label="Back">
           <ArrowLeft />
         </button>
         <span className="flex-1 inline-flex justify-center items-center">

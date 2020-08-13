@@ -4,6 +4,10 @@ import { useState } from "preact/hooks";
 import { useOpeningBook } from "../../services/books";
 import X from "react-feather/dist/icons/x";
 import RefreshCcw from "react-feather/dist/icons/refresh-ccw";
+import ArrowLeft from "react-feather/dist/icons/arrow-left";
+import ArrowRight from "react-feather/dist/icons/arrow-right";
+import applyMove from "./apply-move";
+import cn from "classnames";
 
 interface Props {
   bookName: string;
@@ -23,10 +27,15 @@ function shouldSavePlayedMovesAsRulesForColor(
 }
 
 const OmniEditor: FunctionComponent<Props> = ({ bookName }) => {
-  const [partialFEN, setPartialFEN] = useState(STARTING_POSITION);
+  // stack of positions
+  const [partialFENs, setPartialFENs] = useState([STARTING_POSITION]);
+  const partialFEN = partialFENs[partialFENs.length - 1];
   const [piecePositioning, sideToMove] = partialFEN.split(" ");
   const setSideToMove = (side: "w" | "b") => {
-    setPartialFEN(`${partialFEN.split(" ")[0]} ${side}`);
+    setPartialFENs([
+      ...partialFENs.slice(0, -1),
+      `${partialFEN.split(" ")[0]} ${side}`,
+    ]);
   };
   const [book, updateBook] = useOpeningBook(bookName);
   const [savePlayedMovesAsRules, setSavePlayedMovesAsRules] = useState<
@@ -46,7 +55,7 @@ const OmniEditor: FunctionComponent<Props> = ({ bookName }) => {
     const { [partialFEN]: x, ...bookWithoutClearedMove } = book;
     updateBook(bookWithoutClearedMove);
   };
-  const resetPosition = () => setPartialFEN(STARTING_POSITION);
+  const resetPosition = () => setPartialFENs([STARTING_POSITION]);
   return (
     <div className="chessboard-24rem mt-2 flex mx-auto w-max-content">
       <RuleEditor
@@ -63,7 +72,7 @@ const OmniEditor: FunctionComponent<Props> = ({ bookName }) => {
               // update with old partial fen, not new one
               updateBook({ ...book, ...{ [partialFEN]: `${from}${to}` } });
             }
-            setPartialFEN(newPartialFEN);
+            setPartialFENs([...partialFENs, newPartialFEN]);
           },
         }}
         move={move}
@@ -114,6 +123,26 @@ const OmniEditor: FunctionComponent<Props> = ({ bookName }) => {
             </label>
           </div>
         ))}
+        <div class="space-x-1">
+          <button
+            aria-label="Back"
+            class="border rounded"
+            disabled={partialFENs.length <= 1}
+            onClick={() => setPartialFENs(partialFENs.slice(0, -1))}
+          >
+            <ArrowLeft />
+          </button>
+          <button
+            aria-label="Forward"
+            class="border rounded"
+            disabled={move == null}
+            onClick={() =>
+              setPartialFENs([...partialFENs, applyMove(partialFEN, move)])
+            }
+          >
+            <ArrowRight />
+          </button>
+        </div>
 
         <button class="flex border rounded px-2 my-1" onClick={clearMove}>
           <X size={18} />

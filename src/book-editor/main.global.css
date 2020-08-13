@@ -27,8 +27,13 @@ button {
   display: inline-flex;
   align-items: center;
 }
-button svg {
+/* icon only buttons have aria-label and icon-only buttons shouldn't have margin */
+button:not([aria-label]) svg {
   margin-right: 0.25rem;
+}
+button:disabled {
+  @apply text-gray-500;
+  cursor: not-allowed;
 }
 
 .chessboard-12rem .cg-wrap {
