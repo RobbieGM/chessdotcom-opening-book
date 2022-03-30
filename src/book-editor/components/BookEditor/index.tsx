@@ -15,7 +15,7 @@ const button = "px-2 rounded";
 
 const BookEditor: FunctionComponent<Props> = ({ bookName, goBack }) => {
   const [viewMode, setViewMode] = useState<"omni-editor" | "rules-overview">(
-    "rules-overview"
+    "omni-editor"
   );
   return (
     <Fragment>
