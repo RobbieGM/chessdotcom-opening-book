@@ -37,7 +37,7 @@ const BookListManager: FunctionComponent<Props> = ({ editBook }) => {
     const nameWithoutExtension = file.name.slice(0, file.name.lastIndexOf("."));
     const content = JSON.parse(await readAsText(file)) as OpeningBook;
     if (
-      openingBookNames.includes(nameWithoutExtension) &&
+      !openingBookNames.includes(nameWithoutExtension) ||
       confirm(
         `Overwrite saved version of "${nameWithoutExtension}" with imported version?`
       )
@@ -61,7 +61,7 @@ const BookListManager: FunctionComponent<Props> = ({ editBook }) => {
     if (
       !confirm(
         `Merge "${secondary}" into "${primary}"? If rules conflict, rules from "${primary}" will take ` +
-          `priority. This operation will overwrite the book "${primary}" and cannot be undone.`
+        `priority. This operation will overwrite the book "${primary}" and cannot be undone.`
       )
     ) {
       return;
