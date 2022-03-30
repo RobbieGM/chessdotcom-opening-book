@@ -12,13 +12,13 @@ interface Props {
    * Function to set partial FEN. If absent, only move can be set and position is uneditable.
    */
   editable:
-    | {
-        enabled: false;
-      }
-    | {
-        enabled: true;
-        onEdit: (partialFEN: string, move: { from: Key; to: Key }) => void;
-      };
+  | {
+    enabled: false;
+  }
+  | {
+    enabled: true;
+    onEdit: (partialFEN: string, move: { from: Key; to: Key }) => void;
+  };
   move: string | null;
   setMove: (move: string) => void;
   /**
@@ -33,16 +33,19 @@ export default class RuleEditor extends Component<Props> {
     if (this.chessground.current == null) {
       return;
     }
+    if (this.props.move == null) {
+      this.chessground.current.setShapes([]);
+      return;
+    }
+    const isExtendedNotation = !isNaN(parseInt(this.props.move[1], 10)) && this.props.move.length >= 4;
     this.chessground.current.setShapes(
-      this.props.move
-        ? [
-            {
-              brush: "blue",
-              orig: this.props.move.slice(0, 2) as Key,
-              dest: this.props.move.slice(2, 4) as Key,
-            },
-          ]
-        : []
+      isExtendedNotation ? [
+        {
+          brush: "blue",
+          orig: this.props.move.slice(0, 2) as Key,
+          dest: this.props.move.slice(2, 4) as Key,
+        },
+      ] : []
     );
   }
   componentDidUpdate(): void {
@@ -82,11 +85,11 @@ export default class RuleEditor extends Component<Props> {
                         const sideToMove:
                           | "w"
                           | "b" = updateSideToMoveByLastMovedPiece
-                          ? chessground.state.pieces.get(dest)?.color ===
-                            "white"
-                            ? "b"
-                            : "w"
-                          : (previousSideToMove as "w" | "b");
+                            ? chessground.state.pieces.get(dest)?.color ===
+                              "white"
+                              ? "b"
+                              : "w"
+                            : (previousSideToMove as "w" | "b");
                         const newPartialFEN = `${piecePositioning} ${sideToMove}`;
                         this.props.editable.onEdit(newPartialFEN, {
                           from: orig,
